@@ -41,6 +41,19 @@ class LLMClient:
                 content = response.choices[0].message.content or "{}"
                 return json.loads(content)
             except Exception as exc:
+                msg = str(exc).lower()
+                if "insufficient_quota" in msg:
+                    raise RuntimeError(
+                        "OPENAI_INSUFFICIENT_QUOTA: Your OpenAI account has no remaining quota."
+                    ) from exc
+                if "invalid_api_key" in msg or "incorrect api key" in msg:
+                    raise RuntimeError(
+                        "OPENAI_INVALID_API_KEY: Provided OpenAI API key is invalid."
+                    ) from exc
+                if "rate_limit" in msg:
+                    raise RuntimeError(
+                        "OPENAI_RATE_LIMIT: OpenAI rate limit exceeded. Retry later."
+                    ) from exc
                 last_error = exc
 
         raise RuntimeError(f"LLM JSON generation failed after retry: {last_error}")

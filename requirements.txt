@@ -1,5 +1,5 @@
 openai
-faiss-cpu
+faiss-cpu; python_version < "3.12"
 streamlit
 pymupdf
 pdfplumber
