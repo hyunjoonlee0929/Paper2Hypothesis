@@ -2,6 +2,7 @@ openai
 faiss-cpu
 streamlit
 pymupdf
+pdfplumber
 requests
 python-dotenv
 tiktoken
